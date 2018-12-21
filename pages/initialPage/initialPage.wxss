@@ -1,5 +1,19 @@
-/* pages/welcomePage/welcomePage.wxss */
-page {
-  /* background-color:#c00; */
-  /* height: 100%; */
+.buttonContainer {
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+} 
+
+
+button {
+  opacity: 1;
+  background-color: rgba(7, 1, 1, 0.801);
+  color:aliceblue;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5%;
+}
+
+#camBtn , #albumBtn {
+  display:inline-table;
 }

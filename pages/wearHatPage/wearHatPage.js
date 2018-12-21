@@ -2,11 +2,20 @@
 //获取应用实例
 const app = getApp()
 
+const device = wx.getSystemInfoSync(); // get device info
+const width = device.windowWidth;
+const height = width;
+
 Page({
   data: {
     bgPic: app.globalData.bgPic,
     imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     currentHatId: 1,
+    isHidingHat: false,
+
+    width: width,
+    height: height,
+    topSpace: height,
 
     hatCenterX: wx.getSystemInfoSync().windowWidth / 2,
     hatCenterY: 150,
@@ -20,14 +29,24 @@ Page({
     scale: 1,
     rotate: 0
   },
-  onLoad() {
-    console.log("wearHat: " + app.globalData.bgPic);
+  
+  onLoad: function() {
     this.setData({
-      bgPic: app.globalData.bgPic
-    })
+      bgPic: app.globalData.bgPic,
+      width: width - 20 + "px",
+      height: height - 20 + "px",
+      topSpace: height + "px"
+    });
+
+    wx.showShareMenu({
+      withShareTicket: true
+    });
   },
 
-  onReady() {
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onReady: function () {
     this.hat_center_x = this.data.hatCenterX;
     this.hat_center_y = this.data.hatCenterY;
     this.cancel_center_x = this.data.cancelCenterX;
@@ -41,7 +60,44 @@ Page({
     this.touch_target = "";
     this.start_x = 0;
     this.start_y = 0;
+
+    const self = this;
+    if (!app.globalData.tip2Got) {
+      wx.showModal({
+        title: 'Tips',
+        content: '1.左右滑动底部备选栏，预览更多帽子\r\n2.按住帽子框右下角的绿色时针并拖动，完成缩放和和旋转\r\n1.Scroll the bottom bar horizontally to view more options！ \r\n2.Drag the green clock on the right-bottom corner to adjust the hat.',
+        success: function (res) {
+          if (res.confirm) {
+            app.globalData.tip2Got = true;
+            // console.log('User has confirmed')
+          }
+        }
+      })
+    }
   },
+
+
+  /**
+   * Tips for users
+   * 帮助
+   */
+  helpBtn() {
+    wx.showModal({
+      title: 'Tips',
+      content: '1.左右滑动底部备选栏，预览更多帽子\r\n2.按住帽子框右下角的绿色时针并拖动，完成缩放和和旋转\r\n1.Scroll the bottom bar horizontally to view more options！ \r\n2.Drag the green clock on the right-bottom corner to adjust the hat.',
+      success: function (res) {
+        if (res.confirm) {
+          // console.log('User has confirmed')
+        }
+      }
+    })
+  },
+
+
+  /*
+  **
+  ** Touch Handlers
+  */
   touchStart(e) {
     if (e.target.id == "hat") {
       this.touch_target = "hat";
@@ -56,6 +112,7 @@ Page({
       this.start_y = e.touches[0].clientY;
     }
   },
+
   touchEnd(e) {
     this.hat_center_x = this.data.hatCenterX;
     this.hat_center_y = this.data.hatCenterY;
@@ -68,6 +125,7 @@ Page({
     this.scale = this.data.scale;
     this.rotate = this.data.rotate;
   },
+
   touchMove(e) {
     var current_x = e.touches[0].clientX;
     var current_y = e.touches[0].clientY;
@@ -108,17 +166,44 @@ Page({
   },
 
 
+  /*
+  * Choose a hat from the bottom bar
+  */
   chooseImg(e) {
-    console.log(e);
+    // console.log(e);
     this.setData({
-      currentHatId: e.target.dataset.hatId
+      currentHatId: e.target.dataset.hatId,
+      isHidingHat: false,
+
+      // reset the position and size of the hat
+      hatCenterX: wx.getSystemInfoSync().windowWidth / 2,
+      hatCenterY: 150,
+      cancelCenterX: wx.getSystemInfoSync().windowWidth / 2 - 50 - 2,
+      cancelCenterY: 100,
+      handleCenterX: wx.getSystemInfoSync().windowWidth / 2 + 50 - 2,
+      handleCenterY: 200,
+     
+      hatSize: 100,
+
+      scale: 1,
+      rotate: 0
     })
   },
+
+  /*
+  * Hide Hat
+  */
+  hideHat() {
+    this.setData({
+      isHidingHat: true
+    })
+  },
+
   combinePic() {
     app.globalData.scale = this.scale;
     app.globalData.rotate = this.rotate;
-    app.globalData.hat_center_x = this.hat_center_x;
-    app.globalData.hat_center_y = this.hat_center_y;
+    app.globalData.hat_center_x = this.hat_center_x - 10;
+    app.globalData.hat_center_y = this.hat_center_y - 10;
     app.globalData.currentHatId = this.data.currentHatId;
     wx.navigateTo({
       url: '../savePicPage/savePicPage',

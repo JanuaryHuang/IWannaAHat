@@ -7,10 +7,8 @@
   "window": {
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#c00",
-    "backgroundColor": "#c00",
-    "backgroundColorTop": "#c00",
-    "navigationBarTitleText": "I wanna a HAT!",
-    "enablePullDownRefresh": true,
+    "navigationBarTitleText": "IWannaAHAT! 我要一顶圣诞帽！",
+    "enablePullDownRefresh": false,
     "navigationBarTextStyle": "white"
   }
 }

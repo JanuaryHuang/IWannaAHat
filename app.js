@@ -1,5 +1,11 @@
 //app.js
 App({
+  onLoad: function () {
+    wx.showShareMenu({
+      withShareTicket: true
+    })
+  },
+
   onLaunch: function () {
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
@@ -34,14 +40,14 @@ App({
     })
   },
   globalData: {
-    userInfo: null
-    ,
-    bgPic:null
-    // ,
-    // scale:1,
-    // rotate:0,
-    // hat_center_x:0,
-    // hat_center_x:0,
-    // currentHatId:1
+    tip1Got: false,
+    tip2Got: false,
+    userInfo: null,
+    bgPic:null,
+    scale:1,
+    rotate:0,
+    hat_center_x:0,
+    hat_center_x:0,
+    currentHatId:1
   }
 })
